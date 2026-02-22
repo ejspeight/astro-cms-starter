@@ -16,6 +16,7 @@
    ============================================================================ */
 
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* ---------------------------------------------------------------------------
    THEME — Brand colours, fonts, and design tokens
