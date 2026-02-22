@@ -1,0 +1,43 @@
+---
+/**
+ * 404 Page — Shown when a route cannot be found.
+ * Astro automatically serves this file for any unmatched URL.
+ */
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+    title="Page Not Found"
+    description="The page you're looking for doesn't exist or has been moved."
+    noindex={true}
+>
+    <main class="flex-1 flex items-center justify-center py-24 px-6">
+        <div class="max-w-lg text-center">
+            <p class="text-8xl font-bold font-heading text-primary/20 mb-4 leading-none">
+                404
+            </p>
+            <h1 class="text-3xl font-bold font-heading text-text-heading mb-4">
+                Page not found
+            </h1>
+            <p class="text-text-body text-lg mb-8">
+                The page you're looking for doesn't exist or may have been
+                moved. Check the URL, or head back home.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <a
+                    href="/"
+                    class="inline-block bg-primary hover:bg-primary-hover text-white font-semibold px-8 py-3 rounded-md transition-colors duration-200"
+                >
+                    Back to Home
+                </a>
+                <a
+                    href="/contact"
+                    class="inline-block bg-transparent border border-border hover:border-primary text-text-body hover:text-primary font-semibold px-8 py-3 rounded-md transition-colors duration-200"
+                >
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </main>
+</BaseLayout>

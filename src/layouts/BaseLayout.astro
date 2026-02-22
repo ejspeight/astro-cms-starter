@@ -43,6 +43,11 @@ const {
 // Build the full page title using the template from site config
 const fullTitle = site.seo.titleTemplate.replace("%s", title);
 
+// Analytics — loaded only when env vars are set (see .env.example)
+// Prefer GTM when both are present; GTM can bundle GA inside the container.
+const gtmId = import.meta.env.PUBLIC_GTM_ID; // e.g. GTM-XXXXXXX
+const gaId = import.meta.env.PUBLIC_GA_ID; // e.g. G-XXXXXXXXXX
+
 // Resolve canonical URL — use override or derive from current page path
 const canonical = canonicalUrl ?? new URL(Astro.url.pathname, site.url).href;
 
@@ -85,9 +90,19 @@ const absoluteOgImage = ogImage?.startsWith("http")
             )
         }
 
-        <!-- Favicons -->
+        <!-- RSS Feed auto-discovery -->
+        <link
+            rel="alternate"
+            type="application/rss+xml"
+            title={`${site.name} Blog`}
+            href="/rss.xml"
+        />
+
+        <!-- Favicons & Web Manifest -->
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/favicon.svg" />
+        <link rel="manifest" href="/site.webmanifest" />
 
         <!--
       Theme colour for mobile browsers — reads from the CSS variable set in
@@ -118,11 +133,62 @@ const absoluteOgImage = ogImage?.startsWith("http")
             is:inline
             src="https://identity.netlify.com/v1/netlify-identity-widget.js"
         ></script>
+
+        <!--
+      Analytics — inject GTM or GA4 when the corresponding env var is set.
+      Set PUBLIC_GTM_ID=GTM-XXXXXXX or PUBLIC_GA_ID=G-XXXXXXXXXX in your
+      .env file (or Netlify environment variables). Neither loads if unset.
+      GTM takes precedence — manage GA inside the GTM container instead.
+    -->
+        {gtmId && (
+            <script is:inline define:vars={{ gtmId }}>
+                (function (w, d, s, l, i) {
+                    w[l] = w[l] || [];
+                    w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+                    var f = d.getElementsByTagName(s)[0],
+                        j = d.createElement(s),
+                        dl = l != "dataLayer" ? "&l=" + l : "";
+                    j.async = true;
+                    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+                    f.parentNode.insertBefore(j, f);
+                })(window, document, "script", "dataLayer", gtmId);
+            </script>
+        )}
+        {!gtmId && gaId && (
+            <>
+                <script
+                    is:inline
+                    define:vars={{ gaId }}
+                    src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+                    async
+                ></script>
+                <script is:inline define:vars={{ gaId }}>
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag() {
+                        dataLayer.push(arguments);
+                    }
+                    gtag("js", new Date());
+                    gtag("config", gaId);
+                </script>
+            </>
+        )}
     </head>
 
     <body
         class="min-h-screen flex flex-col bg-accent text-text-body font-body antialiased"
     >
+        <!-- GTM noscript fallback — required by GTM, no-op without a GTM ID -->
+        {gtmId && (
+            <noscript>
+                <iframe
+                    src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+                    height="0"
+                    width="0"
+                    style="display:none;visibility:hidden"
+                ></iframe>
+            </noscript>
+        )}
+
         <!-- Skip to content link — visible on focus for keyboard/screen reader users -->
         <a
             href="#main-content"
