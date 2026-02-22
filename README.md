@@ -4,20 +4,30 @@ Small business website starter built with Astro, Tailwind CSS v4, and Decap CMS.
 
 ## Stack
 
-- Astro v5 with TypeScript
-- Tailwind CSS v4 with theme tokens in a single `@theme` block
-- Tailwind Typography plugin for styled markdown content
-- Decap CMS at `/admin` with git-based content management
-- Netlify Forms for contact form submissions (no backend needed)
-- SEO meta tags, Open Graph, Twitter Cards, canonical URLs in the base layout
-- Sitemap auto-generated at build time via `@astrojs/sitemap`
-- RSS feed at `/rss.xml` via `@astrojs/rss`
-- PWA web manifest and favicon wired up and ready to customise
-- GTM / GA4 analytics slot — loads only when env vars are set
+| | |
+|:--|:--|
+| **Framework** | [Astro v5](https://astro.build) with TypeScript |
+| **Styles** | [Tailwind CSS v4](https://tailwindcss.com) — theme tokens in a single `@theme` block |
+| **Typography** | [@tailwindcss/typography](https://github.com/tailwindlabs/tailwindcss-typography) for styled markdown |
+| **CMS** | [Decap CMS](https://decapcms.org) at `/admin` — git-based, no database |
+| **Forms** | [Netlify Forms](https://www.netlify.com/products/forms/) — no backend or API keys needed |
+| **Sitemap** | [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) — generated at build time |
+| **RSS** | [@astrojs/rss](https://docs.astro.build/en/guides/rss/) — feed at `/rss.xml` |
+| **Hosting** | [Netlify](https://netlify.com) — config via `netlify.toml` |
+
+## Features
+
+- SEO meta tags, Open Graph, Twitter Cards, and canonical URLs in the base layout
+- Sitemap at `/sitemap-index.xml` and `robots.txt` generated at build time
+- RSS feed at `/rss.xml` with auto-discovery `<link>` in every page `<head>`
+- PWA web manifest (`site.webmanifest`) and favicon wired up and ready to customise
+- GTM / GA4 analytics slot in the base layout — loads only when env vars are set, zero output otherwise
 - Branded 404 page
-- Accessible skip-to-content link and keyboard focus styles
-- Mobile responsive nav with hamburger menu
-- Blog pagination (6 posts per page)
+- Blog listing with pagination (6 posts per page, configurable)
+- Accessible skip-to-content link and keyboard focus styles throughout
+- Mobile-responsive nav with hamburger menu (vanilla JS, no framework)
+- Team member grid on the About page
+- Contact form with honeypot spam protection, redirects to a thank-you page
 
 ## Project structure
 
