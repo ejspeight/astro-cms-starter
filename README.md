@@ -1,7 +1,6 @@
 # Astro CMS Starter
 
-Small business website starter built with Astro, Tailwind CSS v4, and Decap CMS. Deploys to Netlify. Clone it, rebrand it, ship it.
-
+Small business website starter built with Astro, Tailwind CSS v4, and Decap CMS. Deploys to Netlify.
 ## Stack
 
 | | |
