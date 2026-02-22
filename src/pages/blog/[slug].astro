@@ -1,0 +1,79 @@
+---
+/**
+ * Blog Post Detail — Individual blog post page.
+ *
+ * Uses Astro's static paths to generate a page for each blog entry.
+ */
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const dateStr = new Date(post.data.date).toLocaleDateString("en-AU", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.seo_description || undefined}
+  ogImage={post.data.cover_image || undefined}
+>
+  <main class="flex-1">
+    <!-- Post header -->
+    <section class="bg-secondary text-text-light py-16 md:py-20 px-6">
+      <div class="max-w-3xl mx-auto text-center">
+        <div class="flex justify-center items-center gap-3 text-sm text-text-muted mb-4">
+          <time datetime={post.data.date.toISOString()}>{dateStr}</time>
+          {post.data.author && (
+            <>
+              <span>&middot;</span>
+              <span>{post.data.author}</span>
+            </>
+          )}
+        </div>
+        <h1 class="text-3xl md:text-5xl font-bold font-heading text-text-light">{post.data.title}</h1>
+      </div>
+    </section>
+
+    <!-- Cover image -->
+    {post.data.cover_image && (
+      <div class="max-w-4xl mx-auto -mt-8 px-6">
+        <img
+          src={post.data.cover_image}
+          alt={post.data.title}
+          class="w-full rounded-lg shadow-lg"
+          loading="lazy"
+        />
+      </div>
+    )}
+
+    <!-- Post body -->
+    <section class="py-12 md:py-16 px-6">
+      <div class="max-w-3xl mx-auto prose prose-slate">
+        <Content />
+      </div>
+    </section>
+
+    <!-- Back link -->
+    <section class="pb-12 px-6">
+      <div class="max-w-3xl mx-auto">
+        <a href="/blog" class="text-primary hover:text-primary-hover font-semibold transition-colors">
+          &larr; Back to all posts
+        </a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

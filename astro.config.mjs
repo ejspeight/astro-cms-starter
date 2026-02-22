@@ -5,9 +5,9 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  // Ensure trailing slashes so /admin/ resolves to /admin/index.html
-  // in both the dev server and production builds.
-  trailingSlash: "always",
+  // "ignore" lets most pages work without trailing slashes while allowing
+  // /admin/ to resolve naturally to public/admin/index.html (Decap CMS needs this).
+  trailingSlash: "ignore",
 
   vite: {
     plugins: [tailwindcss()],

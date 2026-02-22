@@ -1,14 +1,10 @@
 ---
 /**
- * Admin Page — Serves the Decap CMS panel at /admin/
+ * Admin Page — Serves the Decap CMS panel.
  *
- * This replaces the static /public/admin/index.html approach because
- * Astro's dev server doesn't do directory index resolution for static
- * files in /public. By making this an actual Astro page route, the
- * /admin/ URL works reliably in both dev and production.
- *
- * Note: The config.yml still lives in /public/admin/config.yml and is
- * served as a static asset — Decap CMS fetches it via relative URL.
+ * Since trailingSlash is "ignore", this page can be served at /admin
+ * (without trailing slash), which breaks Decap's relative config.yml lookup.
+ * We inject a <head> <link> to tell Decap where the config lives.
  */
 ---
 
@@ -18,22 +14,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
-    <title>Content Manager — Admin</title>
+    <title>Content Manager</title>
 
     <!-- Netlify Identity Widget — handles CMS authentication -->
     <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <!-- Set base href so Decap CMS resolves config.yml relative to /admin/ -->
+    <base href="/admin/" />
   </head>
   <body>
-    <!--
-      Decap CMS mounts its React app into the body.
-      The config.yml in /public/admin/ defines the collections, backend, and media settings.
-
-      Authentication is handled by Netlify Identity (git-gateway backend).
-      Make sure Netlify Identity is enabled in the Netlify site dashboard:
-        Site settings → Identity → Enable Identity
-      And that Git Gateway is enabled:
-        Site settings → Identity → Services → Git Gateway → Enable
-    -->
     <script is:inline src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   </body>
 </html>

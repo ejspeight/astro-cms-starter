@@ -1,0 +1,95 @@
+---
+/**
+ * Footer — Site-wide footer with contact info, hours, social links, and nav.
+ *
+ * Reads all data from site.ts so rebranding is a single-file change.
+ */
+
+import { site } from "../config/site";
+
+// Build a formatted address string
+const addr = site.contact.address;
+const addressLine = `${addr.street}, ${addr.suburb}, ${addr.city} ${addr.postcode}`;
+
+// Filter to only social links that have a value
+const activeSocials = Object.entries(site.social).filter(
+  ([, url]) => url !== null
+) as [string, string][];
+
+// Business hours as an array for iteration
+const days = [
+  ["Monday", site.hours.monday],
+  ["Tuesday", site.hours.tuesday],
+  ["Wednesday", site.hours.wednesday],
+  ["Thursday", site.hours.thursday],
+  ["Friday", site.hours.friday],
+  ["Saturday", site.hours.saturday],
+  ["Sunday", site.hours.sunday],
+] as const;
+---
+
+<footer class="bg-secondary text-text-light">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+      <!-- Column 1: About / tagline -->
+      <div>
+        <h3 class="text-lg font-heading font-bold mb-3">{site.name}</h3>
+        <p class="text-text-muted text-sm leading-relaxed">{site.tagline}</p>
+
+        {activeSocials.length > 0 && (
+          <div class="flex gap-3 mt-4">
+            {activeSocials.map(([platform, url]) => (
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-text-muted hover:text-text-light transition-colors"
+                aria-label={platform.charAt(0).toUpperCase() + platform.slice(1)}
+              >
+                <span class="text-sm capitalize">{platform}</span>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <!-- Column 2: Contact info -->
+      <div>
+        <h3 class="text-lg font-heading font-bold mb-3">Contact</h3>
+        <ul class="space-y-2 text-sm text-text-muted">
+          <li>
+            <a href={`mailto:${site.contact.email}`} class="hover:text-text-light transition-colors">
+              {site.contact.email}
+            </a>
+          </li>
+          <li>
+            <a href={`tel:${site.contact.phone.replace(/\s/g, "")}`} class="hover:text-text-light transition-colors">
+              {site.contact.phone}
+            </a>
+          </li>
+          <li>{addressLine}</li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Business hours -->
+      <div>
+        <h3 class="text-lg font-heading font-bold mb-3">Hours</h3>
+        <dl class="text-sm text-text-muted space-y-1">
+          {days.map(([day, hours]) => (
+            <div class="flex justify-between">
+              <dt>{day}</dt>
+              <dd>{hours ?? "Closed"}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="mt-10 pt-6 border-t border-secondary-light text-center text-sm text-text-muted">
+      <p>&copy; {new Date().getFullYear()} {site.name}. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
