@@ -16,6 +16,8 @@
 
 import "../styles/global.css";
 import { site } from "../config/site";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
 interface Props {
     /** Page title — inserted into the site.seo.titleTemplate */
@@ -121,11 +123,12 @@ const absoluteOgImage = ogImage?.startsWith("http")
     <body
         class="min-h-screen flex flex-col bg-accent text-text-body font-body antialiased"
     >
-        <!--
-      Page content is injected here via <slot />.
-      In later phases we'll add <Header /> above and <Footer /> below the slot.
-    -->
+        <Header />
+
+        <!-- Page content -->
         <slot />
+
+        <Footer />
 
         <!--
       Netlify Identity redirect handler — after login, redirect the user

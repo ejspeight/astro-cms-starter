@@ -1,0 +1,124 @@
+---
+/**
+ * Header — Site-wide navigation bar.
+ *
+ * Reads navigation links from the CMS-managed navigation.json file,
+ * and logo config from brand.ts. Highlights the current page link.
+ * Includes a mobile hamburger menu toggle.
+ */
+
+import { brand } from "../config/brand";
+
+// Read CMS-managed navigation
+const navData = await import("../content/settings/navigation.json");
+const navLinks: { label: string; url: string }[] = navData.nav_links;
+
+// Get current path for active link highlighting
+const currentPath = Astro.url.pathname;
+
+/**
+ * Check if a nav link matches the current page.
+ * Handles both exact match (/) and prefix match (/about/).
+ */
+function isActive(href: string): boolean {
+  if (href === "/") return currentPath === "/" || currentPath === "/index.html";
+  return currentPath.startsWith(href);
+}
+---
+
+<header class="bg-accent border-b border-border sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href="/" class="flex-shrink-0" aria-label="Home">
+        <img
+          src={brand.logo.src}
+          alt={brand.logo.alt}
+          width={brand.logo.width}
+          height={brand.logo.height}
+          class="h-10 w-auto"
+        />
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-1" aria-label="Main navigation">
+        {navLinks.map((link) => (
+          <a
+            href={link.url}
+            class:list={[
+              "px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150",
+              isActive(link.url)
+                ? "bg-primary text-text-light"
+                : "text-text-body hover:bg-primary-light hover:text-primary",
+            ]}
+            aria-current={isActive(link.url) ? "page" : undefined}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Mobile menu button -->
+      <button
+        type="button"
+        class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-text-body hover:bg-primary-light hover:text-primary transition-colors"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+        data-mobile-toggle
+      >
+        <!-- Hamburger icon -->
+        <svg class="h-6 w-6" data-icon="menu" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+        <!-- Close icon (hidden by default) -->
+        <svg class="h-6 w-6 hidden" data-icon="close" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile nav panel -->
+  <nav
+    class="md:hidden hidden border-t border-border"
+    data-mobile-menu
+    aria-label="Mobile navigation"
+  >
+    <div class="px-4 py-3 space-y-1">
+      {navLinks.map((link) => (
+        <a
+          href={link.url}
+          class:list={[
+            "block px-3 py-2 rounded-md text-base font-medium transition-colors duration-150",
+            isActive(link.url)
+              ? "bg-primary text-text-light"
+              : "text-text-body hover:bg-primary-light hover:text-primary",
+          ]}
+          aria-current={isActive(link.url) ? "page" : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </nav>
+</header>
+
+<!-- Mobile menu toggle script — vanilla JS, no framework needed -->
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.querySelector("[data-mobile-toggle]");
+    const menu = document.querySelector("[data-mobile-menu]");
+    const menuIcon = document.querySelector('[data-icon="menu"]');
+    const closeIcon = document.querySelector('[data-icon="close"]');
+
+    if (toggle && menu && menuIcon && closeIcon) {
+      toggle.addEventListener("click", () => {
+        const isOpen = !menu.classList.contains("hidden");
+        menu.classList.toggle("hidden");
+        menuIcon.classList.toggle("hidden");
+        closeIcon.classList.toggle("hidden");
+        toggle.setAttribute("aria-expanded", String(!isOpen));
+      });
+    }
+  });
+</script>

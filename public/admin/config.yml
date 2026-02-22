@@ -1,3 +1,4 @@
+# Set to false for production env
 local_backend: true
 
 backend:

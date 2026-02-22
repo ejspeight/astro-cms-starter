@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "cms": "concurrently \"astro dev\" \"decap-server\"",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -12,5 +13,9 @@
     "@tailwindcss/vite": "^4.2.0",
     "astro": "^5.17.1",
     "tailwindcss": "^4.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "decap-server": "^3.5.0"
   }
 }

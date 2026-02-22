@@ -71,16 +71,9 @@ export const site = {
   // ---------------------------------------------------------------------------
   // NAVIGATION
   // ---------------------------------------------------------------------------
-  // Main nav links rendered in header and mobile menu.
-  // `href` should match Astro page routes.
+  // Navigation links are managed via CMS in src/content/settings/navigation.json.
+  // The Header component reads from that file directly.
   // ---------------------------------------------------------------------------
-  navigation: [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
-    { label: "Services", href: "/services" },
-    { label: "Blog", href: "/blog" },
-    { label: "Contact", href: "/contact" },
-  ],
 
   // ---------------------------------------------------------------------------
   // SEO / OPEN GRAPH DEFAULTS
@@ -96,5 +89,4 @@ export const site = {
 
 // Type exports for use in components and layouts
 export type Site = typeof site;
-export type NavItem = (typeof site.navigation)[number];
 export type SocialLinks = typeof site.social;
