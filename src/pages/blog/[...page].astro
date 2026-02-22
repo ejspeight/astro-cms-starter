@@ -1,0 +1,152 @@
+---
+/**
+ * Blog Listing Page — Paginated list of all blog posts, newest first.
+ *
+ * Routes generated:
+ *   /blog/          → page 1
+ *   /blog/2/        → page 2
+ *   /blog/3/        → page 3  … etc.
+ *
+ * Posts per page is controlled by the POSTS_PER_PAGE constant below.
+ * Astro's paginate() handles path generation and prev/next links automatically.
+ */
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+    const posts = (await getCollection("blog")).sort(
+        (a, b) =>
+            new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+    );
+    // Posts per page — adjust as needed
+    return paginate(posts, { pageSize: 6 });
+};
+
+interface Props {
+    page: Page<CollectionEntry<"blog">>;
+}
+
+const { page } = Astro.props;
+const posts = page.data;
+---
+
+<BaseLayout
+    title={page.currentPage === 1 ? "Blog" : `Blog — Page ${page.currentPage}`}
+    description="News, updates, and insights from our team."
+    noindex={page.currentPage > 1}
+>
+    <main class="flex-1">
+        <!-- Page header -->
+        <section class="bg-secondary text-text-light py-16 md:py-20 px-6">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-4xl md:text-5xl font-bold font-heading text-text-light">
+                    Blog
+                </h1>
+                <p class="mt-4 text-lg text-text-muted">
+                    News, updates, and insights from our team.
+                </p>
+            </div>
+        </section>
+
+        <!-- Posts grid -->
+        <section class="py-12 md:py-16 px-6">
+            <div class="max-w-4xl mx-auto">
+                {
+                    posts.length === 0 ? (
+                        <p class="text-center text-text-muted text-lg">
+                            No posts yet. Check back soon!
+                        </p>
+                    ) : (
+                        <div class="space-y-8">
+                            {posts.map((post) => {
+                                const dateStr = new Date(
+                                    post.data.date
+                                ).toLocaleDateString("en-AU", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                });
+
+                                return (
+                                    <article class="border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                                        <a
+                                            href={`/blog/${post.id}`}
+                                            class="block p-6 md:p-8"
+                                        >
+                                            <div class="flex flex-wrap items-center gap-3 text-sm text-text-muted mb-2">
+                                                <time
+                                                    datetime={post.data.date.toISOString()}
+                                                >
+                                                    {dateStr}
+                                                </time>
+                                                {post.data.author && (
+                                                    <>
+                                                        <span>&middot;</span>
+                                                        <span>
+                                                            {post.data.author}
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </div>
+                                            <h2 class="text-xl md:text-2xl font-bold font-heading hover:text-primary transition-colors">
+                                                {post.data.title}
+                                            </h2>
+                                            {post.data.seo_description && (
+                                                <p class="mt-2 text-text-body">
+                                                    {post.data.seo_description}
+                                                </p>
+                                            )}
+                                        </a>
+                                    </article>
+                                );
+                            })}
+                        </div>
+                    )
+                }
+
+                <!-- Pagination controls -->
+                {
+                    page.lastPage > 1 && (
+                        <nav
+                            class="flex items-center justify-between mt-12 pt-8 border-t border-border"
+                            aria-label="Blog pagination"
+                        >
+                            <div>
+                                {page.url.prev ? (
+                                    <a
+                                        href={page.url.prev}
+                                        class="inline-flex items-center gap-2 text-primary hover:text-primary-hover font-semibold transition-colors"
+                                    >
+                                        &larr; Newer posts
+                                    </a>
+                                ) : (
+                                    <span />
+                                )}
+                            </div>
+
+                            <span class="text-sm text-text-muted">
+                                Page {page.currentPage} of {page.lastPage}
+                            </span>
+
+                            <div>
+                                {page.url.next ? (
+                                    <a
+                                        href={page.url.next}
+                                        class="inline-flex items-center gap-2 text-primary hover:text-primary-hover font-semibold transition-colors"
+                                    >
+                                        Older posts &rarr;
+                                    </a>
+                                ) : (
+                                    <span />
+                                )}
+                            </div>
+                        </nav>
+                    )
+                }
+            </div>
+        </section>
+    </main>
+</BaseLayout>

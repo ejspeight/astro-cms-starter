@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Block CMS admin panel from crawlers
+Disallow: /admin/
+
+# Sitemap location — update the domain when rebranding
+Sitemap: https://example.com/sitemap-index.xml
