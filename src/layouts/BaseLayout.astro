@@ -1,0 +1,147 @@
+---
+/**
+ * BaseLayout — Root layout used by every page on the site.
+ *
+ * Responsibilities:
+ * - HTML boilerplate and <head> with SEO meta tags
+ * - Global CSS import (Tailwind + brand theme)
+ * - Open Graph / social meta tags
+ * - Slot for page-specific content
+ *
+ * Usage:
+ *   <BaseLayout title="Home" description="Welcome to our gym">
+ *     <main>...</main>
+ *   </BaseLayout>
+ */
+
+import "../styles/global.css";
+import { site } from "../config/site";
+
+interface Props {
+    /** Page title — inserted into the site.seo.titleTemplate */
+    title: string;
+    /** Meta description for SEO. Falls back to site.description */
+    description?: string;
+    /** Open Graph image URL. Falls back to site.seo.defaultImage */
+    ogImage?: string;
+    /** Optional canonical URL override */
+    canonicalUrl?: string;
+    /** If true, robots will not index this page */
+    noindex?: boolean;
+}
+
+const {
+    title,
+    description = site.description,
+    ogImage = site.seo.defaultImage,
+    canonicalUrl,
+    noindex = false,
+} = Astro.props;
+
+// Build the full page title using the template from site config
+const fullTitle = site.seo.titleTemplate.replace("%s", title);
+
+// Resolve canonical URL — use override or derive from current page path
+const canonical = canonicalUrl ?? new URL(Astro.url.pathname, site.url).href;
+
+// Resolve OG image to absolute URL
+const absoluteOgImage = ogImage?.startsWith("http")
+    ? ogImage
+    : new URL(ogImage ?? "", site.url).href;
+---
+
+<!doctype html>
+<html lang={site.language} class="scroll-smooth">
+    <head>
+        <!-- Core meta -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content={Astro.generator} />
+
+        <!-- SEO -->
+        <title>{fullTitle}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
+        {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={fullTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={absoluteOgImage} />
+        <meta property="og:site_name" content={site.name} />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={fullTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={absoluteOgImage} />
+        {
+            site.seo.twitterHandle && (
+                <meta name="twitter:site" content={site.seo.twitterHandle} />
+            )
+        }
+
+        <!-- Favicons -->
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+
+        <!--
+      Theme colour for mobile browsers — reads from the CSS variable set in
+      global.css so there's only one place to update brand colours.
+      The inline script runs immediately and sets the meta tag content.
+    -->
+        <meta name="theme-color" content="#1e40af" id="theme-color-meta" />
+        <script is:inline>
+            (function () {
+                var primary = getComputedStyle(document.documentElement)
+                    .getPropertyValue("--color-primary")
+                    .trim();
+                if (primary) {
+                    var meta = document.getElementById("theme-color-meta");
+                    if (meta) meta.setAttribute("content", primary);
+                }
+            })();
+        </script>
+
+        <!--
+      Web fonts: If you switch from system fonts to a hosted font (e.g. Google
+      Fonts), add the <link> or @font-face import here. Update the font family
+      in the @theme block of src/styles/global.css to match.
+    -->
+
+        <!-- Netlify Identity widget — required for Decap CMS authentication -->
+        <script
+            is:inline
+            src="https://identity.netlify.com/v1/netlify-identity-widget.js"
+        ></script>
+    </head>
+
+    <body
+        class="min-h-screen flex flex-col bg-accent text-text-body font-body antialiased"
+    >
+        <!--
+      Page content is injected here via <slot />.
+      In later phases we'll add <Header /> above and <Footer /> below the slot.
+    -->
+        <slot />
+
+        <!--
+      Netlify Identity redirect handler — after login, redirect the user
+      back to the /admin/ CMS panel. This script must be on every page
+      so the OAuth redirect works regardless of which page the user lands on.
+    -->
+        <script is:inline>
+            if (window.netlifyIdentity) {
+                window.netlifyIdentity.on("init", (user) => {
+                    if (!user) {
+                        window.netlifyIdentity.on("login", () => {
+                            document.location.href = "/admin/";
+                        });
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

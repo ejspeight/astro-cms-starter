@@ -1,0 +1,82 @@
+# ==============================================================================
+# NETLIFY BUILD & DEPLOY CONFIGURATION
+# ==============================================================================
+#
+# This file configures how Netlify builds and serves the site.
+# Docs: https://docs.netlify.com/configure-builds/file-based-configuration/
+#
+# Key things configured here:
+#   - Build command and publish directory (Astro output)
+#   - Redirects for Netlify Identity (required for Decap CMS auth)
+#   - Security headers
+#   - Asset caching
+# ==============================================================================
+
+# ---------------------------------------------------------------------------
+# BUILD SETTINGS
+# ---------------------------------------------------------------------------
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Node version — pin to LTS for stability
+[build.environment]
+  NODE_VERSION = "20"
+
+# ---------------------------------------------------------------------------
+# REDIRECTS — Netlify Identity
+# ---------------------------------------------------------------------------
+# These redirects are required for the Netlify Identity authentication flow
+# used by Decap CMS. Without them, the OAuth callback will fail.
+# ---------------------------------------------------------------------------
+[[redirects]]
+  from = "/admin"
+  to = "/admin/index.html"
+  status = 200
+
+# Identity endpoint proxy — required for git-gateway auth
+[[redirects]]
+  from = "/.netlify/identity/*"
+  to = "https://identity.netlify.com/.netlify/identity/:splat"
+  status = 200
+  force = true
+
+# ---------------------------------------------------------------------------
+# HEADERS — Security and caching
+# ---------------------------------------------------------------------------
+
+# Security headers applied to all pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Cache static assets aggressively (images, fonts, etc.)
+# Astro hashes built assets so cache-busting is automatic.
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Don't cache the admin panel (always serve fresh for CMS updates)
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# ---------------------------------------------------------------------------
+# DEV SERVER (optional — used by `netlify dev` for local testing)
+# ---------------------------------------------------------------------------
+[dev]
+  command = "npm run dev"
+  port = 4321
+  targetPort = 4321
+  autoLaunch = false

@@ -1,0 +1,9 @@
+{
+  "nav_links": [
+    { "label": "Home", "url": "/" },
+    { "label": "About", "url": "/about" },
+    { "label": "Services", "url": "/services" },
+    { "label": "Blog", "url": "/blog" },
+    { "label": "Contact", "url": "/contact" }
+  ]
+}

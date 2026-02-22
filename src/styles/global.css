@@ -1,0 +1,107 @@
+/* ============================================================================
+   GLOBAL STYLES & TAILWIND v4 THEME CONFIGURATION
+   ============================================================================
+
+   ★ THIS FILE IS THE SINGLE SOURCE OF TRUTH FOR ALL VISUAL DESIGN TOKENS ★
+
+   Colours, fonts, spacing, and border radii are ALL defined here in the
+   @theme block below. Tailwind v4 reads these and generates every utility
+   class automatically (bg-primary, text-secondary, font-heading, etc.).
+
+   TO REBRAND FOR A NEW CLIENT:
+   1. Update the @theme block below — that's it for colours, fonts, and radii.
+   2. Update the logo in src/config/brand.ts (path, alt text, dimensions).
+   3. Update site metadata in src/config/site.ts (name, contact, socials).
+   Done. The entire site will reflect the new brand.
+   ============================================================================ */
+
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   THEME — Brand colours, fonts, and design tokens
+   ---------------------------------------------------------------------------
+   Tailwind v4 uses @theme to define design tokens directly in CSS.
+   These become utility classes automatically:
+     --color-primary    → bg-primary, text-primary, border-primary, etc.
+     --font-heading     → font-heading
+   --------------------------------------------------------------------------- */
+
+@theme {
+    /* Brand colours — neutral blue / slate palette */
+    --color-primary: #1e40af;
+    --color-primary-hover: #1e3a8a;
+    --color-primary-light: #eff6ff;
+
+    --color-secondary: #0f172a;
+    --color-secondary-light: #1e293b;
+
+    --color-accent: #ffffff;
+    --color-accent-muted: #f8fafc;
+
+    /* Text colours */
+    --color-text-heading: #0f172a;
+    --color-text-body: #475569;
+    --color-text-light: #ffffff;
+    --color-text-muted: #94a3b8;
+
+    /* UI colours */
+    --color-border: #e2e8f0;
+    --color-success: #10b981;
+    --color-error: #ef4444;
+
+    /* Font families */
+    --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+    --font-body: "Inter", system-ui, -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+    /* Border radii */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-full: 9999px;
+}
+
+/* ---------------------------------------------------------------------------
+   BASE STYLES — Sensible defaults applied globally
+   --------------------------------------------------------------------------- */
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+        font-family: var(--font-body);
+        color: var(--color-text-body);
+        background-color: var(--color-accent);
+        line-height: 1.6;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-heading);
+        color: var(--color-text-heading);
+        line-height: 1.2;
+        font-weight: 700;
+    }
+
+    /* Remove default focus outline and replace with brand-coloured ring */
+    :focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    /* Ensure images are responsive by default */
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+}

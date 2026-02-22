@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 48" width="160" height="48">
+  <rect width="160" height="48" rx="6" fill="#1A1A2E"/>
+  <text x="80" y="30" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700" fill="#E91E8C">SUAY</text>
+  <text x="80" y="44" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="8" font-weight="400" letter-spacing="2" fill="#FFFFFF">MUAY THAI</text>
+</svg>

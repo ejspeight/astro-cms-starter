@@ -1,0 +1,144 @@
+---
+/**
+ * Home Page — Placeholder for Phase 1
+ *
+ * This page uses the BaseLayout and pulls from the brand config to verify
+ * that the theme system is working correctly. Real content will be added
+ * in Phase 2 when we build the hero section and page shell.
+ */
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../config/site";
+---
+
+<BaseLayout title="Home">
+    <main class="flex-1">
+        <!-- Hero placeholder — demonstrates brand colours are working -->
+        <section class="bg-secondary text-text-light py-24 px-6 text-center">
+            <div class="max-w-3xl mx-auto">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 font-heading">
+                    {site.name}
+                </h1>
+                <p class="text-xl md:text-2xl text-text-muted mb-8">
+                    {site.tagline}
+                </p>
+                <a
+                    href="/contact"
+                    class="inline-block bg-primary hover:bg-primary-hover text-white font-semibold px-8 py-3 rounded-md transition-colors duration-200"
+                >
+                    Get Started
+                </a>
+            </div>
+        </section>
+
+        <!-- Content placeholder — verifies light section styling -->
+        <section class="py-16 px-6">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-4">Phase 1 Complete ✓</h2>
+                <p class="text-text-body text-lg mb-6">
+                    If you can see this page with branded colours, a dark hero
+                    section, and clean typography — the brand config and
+                    Tailwind theme are working correctly.
+                </p>
+
+                <!-- Colour swatch grid — visual verification of theme tokens -->
+                <div
+                    class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 max-w-xl mx-auto"
+                >
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="w-16 h-16 rounded-lg bg-primary shadow-sm">
+                        </div>
+                        <span class="text-sm text-text-muted">Primary</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <div
+                            class="w-16 h-16 rounded-lg bg-secondary shadow-sm"
+                        >
+                        </div>
+                        <span class="text-sm text-text-muted">Secondary</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <div
+                            class="w-16 h-16 rounded-lg bg-accent-muted border border-border shadow-sm"
+                        >
+                        </div>
+                        <span class="text-sm text-text-muted">Accent Muted</span
+                        >
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <div
+                            class="w-16 h-16 rounded-lg bg-primary-light border border-border shadow-sm"
+                        >
+                        </div>
+                        <span class="text-sm text-text-muted"
+                            >Primary Light</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checklist — what to verify in Phase 1 -->
+        <section class="bg-accent-muted py-16 px-6">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-2xl font-bold mb-6 text-center">
+                    Phase 1 Checklist
+                </h2>
+                <ul class="space-y-3 text-text-body">
+                    <li class="flex items-start gap-3">
+                        <span class="text-success font-bold mt-0.5">✓</span>
+                        <span
+                            >Astro project with TypeScript and Tailwind CSS</span
+                        >
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-success font-bold mt-0.5">✓</span>
+                        <span
+                            >Brand config (<code
+                                class="bg-primary-light text-primary px-1.5 py-0.5 rounded text-sm"
+                                >src/config/brand.ts</code
+                            >)</span
+                        >
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-success font-bold mt-0.5">✓</span>
+                        <span
+                            >Site config (<code
+                                class="bg-primary-light text-primary px-1.5 py-0.5 rounded text-sm"
+                                >src/config/site.ts</code
+                            >)</span
+                        >
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-success font-bold mt-0.5">✓</span>
+                        <span
+                            >Content collections defined for Pages, Team, and
+                            Blog</span
+                        >
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-success font-bold mt-0.5">✓</span>
+                        <span>CMS-managed navigation and site settings</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-success font-bold mt-0.5">✓</span>
+                        <span
+                            >Decap CMS at <code
+                                class="bg-primary-light text-primary px-1.5 py-0.5 rounded text-sm"
+                                >/admin</code
+                            > — <a
+                                href="/admin"
+                                class="text-primary hover:underline"
+                                >open admin panel →</a
+                            ></span
+                        >
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-success font-bold mt-0.5">✓</span>
+                        <span>Netlify config with Identity redirects</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+</BaseLayout>

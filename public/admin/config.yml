@@ -1,0 +1,343 @@
+local_backend: true
+
+backend:
+  name: git-gateway
+  branch: master
+
+media_folder: "public/static/uploads"
+public_folder: "/static/uploads"
+
+collections:
+  # --- Site Settings (single file) ---
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - name: "site"
+        label: "General"
+        file: "src/content/settings/site.json"
+        fields:
+          # Identity
+          - {
+              label: "Site URL",
+              name: "site_url",
+              widget: "string",
+              default: "https://example.com",
+              hint: "Full URL including https://",
+            }
+          - { label: "Site Name", name: "site_name", widget: "string" }
+          - { label: "Tagline", name: "tagline", widget: "string" }
+          - { label: "Logo", name: "logo", widget: "image", required: false }
+          - {
+              label: "Favicon",
+              name: "favicon",
+              widget: "image",
+              required: false,
+            }
+
+          # Colours
+          - {
+              label: "Primary Colour",
+              name: "color_primary",
+              widget: "color",
+              default: "#1e40af",
+            }
+          - {
+              label: "Secondary Colour",
+              name: "color_secondary",
+              widget: "color",
+              default: "#0f172a",
+            }
+          - {
+              label: "Accent Colour",
+              name: "color_accent",
+              widget: "color",
+              default: "#e2e8f0",
+            }
+          - {
+              label: "Background Colour",
+              name: "color_background",
+              widget: "color",
+              default: "#ffffff",
+            }
+          - {
+              label: "Text Colour",
+              name: "color_text",
+              widget: "color",
+              default: "#111827",
+            }
+
+          # Typography
+          - {
+              label: "Primary Font",
+              name: "font_primary",
+              widget: "string",
+              default: "Inter",
+              hint: "Google Fonts name",
+            }
+          - {
+              label: "Secondary Font",
+              name: "font_secondary",
+              widget: "string",
+              default: "Inter",
+              hint: "Google Fonts name",
+            }
+
+          # Analytics & Maps
+          - {
+              label: "Google Analytics ID",
+              name: "google_analytics_id",
+              widget: "string",
+              required: false,
+              hint: "e.g. G-XXXXXXXXXX",
+            }
+          - {
+              label: "Google Maps API Key",
+              name: "google_maps_api_key",
+              widget: "string",
+              required: false,
+            }
+          - {
+              label: "Google Maps Location",
+              name: "google_maps_location",
+              widget: "string",
+              required: false,
+              hint: "Place name or address for the embed",
+            }
+
+          # Contact
+          - {
+              label: "Contact Email",
+              name: "contact_email",
+              widget: "string",
+              required: false,
+            }
+          - {
+              label: "Contact Phone",
+              name: "contact_phone",
+              widget: "string",
+              required: false,
+            }
+          - {
+              label: "Address",
+              name: "address",
+              widget: "string",
+              required: false,
+            }
+
+          # Social Links
+          - {
+              label: "Facebook URL",
+              name: "social_facebook",
+              widget: "string",
+              required: false,
+            }
+          - {
+              label: "Instagram URL",
+              name: "social_instagram",
+              widget: "string",
+              required: false,
+            }
+          - {
+              label: "YouTube URL",
+              name: "social_youtube",
+              widget: "string",
+              required: false,
+            }
+          - {
+              label: "TikTok URL",
+              name: "social_tiktok",
+              widget: "string",
+              required: false,
+            }
+
+          # Footer
+          - {
+              label: "Footer Tagline",
+              name: "footer_tagline",
+              widget: "string",
+              required: false,
+            }
+
+      - name: "navigation"
+        label: "Navigation"
+        file: "src/content/settings/navigation.json"
+        fields:
+          - label: "Nav Links"
+            name: "nav_links"
+            widget: "list"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - {
+                  label: "URL",
+                  name: "url",
+                  widget: "string",
+                  hint: "e.g. / or /about or https://external.com",
+                }
+
+  # --- Pages (individual files, each with tailored content + shared SEO fields) ---
+  - name: "pages"
+    label: "Pages"
+    files:
+      - name: "home"
+        label: "Home"
+        file: "src/content/pages/home.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - {
+              label: "SEO Description",
+              name: "seo_description",
+              widget: "text",
+              required: false,
+            }
+          - {
+              label: "OG Image",
+              name: "og_image",
+              widget: "image",
+              required: false,
+            }
+          - { label: "Hero Heading", name: "hero_heading", widget: "string" }
+          - {
+              label: "Hero Subheading",
+              name: "hero_subheading",
+              widget: "string",
+              required: false,
+            }
+          - {
+              label: "Hero CTA Text",
+              name: "hero_cta_text",
+              widget: "string",
+              required: false,
+            }
+          - {
+              label: "Hero CTA Link",
+              name: "hero_cta_link",
+              widget: "string",
+              required: false,
+            }
+          - {
+              label: "Hero Image",
+              name: "hero_image",
+              widget: "image",
+              required: false,
+            }
+          - {
+              label: "About Snippet",
+              name: "about_snippet",
+              widget: "markdown",
+              required: false,
+              hint: "Short intro shown on the home page",
+            }
+          - { label: "Body", name: "body", widget: "markdown" }
+
+      - name: "about"
+        label: "About"
+        file: "src/content/pages/about.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - {
+              label: "SEO Description",
+              name: "seo_description",
+              widget: "text",
+              required: false,
+            }
+          - {
+              label: "OG Image",
+              name: "og_image",
+              widget: "image",
+              required: false,
+            }
+          - { label: "Heading", name: "heading", widget: "string" }
+          - { label: "Intro", name: "intro", widget: "text", required: false }
+          - {
+              label: "Featured Image",
+              name: "featured_image",
+              widget: "image",
+              required: false,
+            }
+          - { label: "Body", name: "body", widget: "markdown" }
+
+      - name: "services"
+        label: "Services"
+        file: "src/content/pages/services.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - {
+              label: "SEO Description",
+              name: "seo_description",
+              widget: "text",
+              required: false,
+            }
+          - {
+              label: "OG Image",
+              name: "og_image",
+              widget: "image",
+              required: false,
+            }
+          - { label: "Heading", name: "heading", widget: "string" }
+          - { label: "Intro", name: "intro", widget: "text", required: false }
+          - { label: "Body", name: "body", widget: "markdown" }
+
+      - name: "contact"
+        label: "Contact"
+        file: "src/content/pages/contact.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - {
+              label: "SEO Description",
+              name: "seo_description",
+              widget: "text",
+              required: false,
+            }
+          - {
+              label: "OG Image",
+              name: "og_image",
+              widget: "image",
+              required: false,
+            }
+          - { label: "Heading", name: "heading", widget: "string" }
+          - { label: "Intro", name: "intro", widget: "text", required: false }
+          - { label: "Body", name: "body", widget: "markdown" }
+
+  # --- Team Members (folder collection, one file per member) ---
+  - name: "team"
+    label: "Team Members"
+    folder: "src/content/team"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Role", name: "role", widget: "string" }
+      - { label: "Photo", name: "photo", widget: "image", required: false }
+      - {
+          label: "Sort Order",
+          name: "sort_order",
+          widget: "number",
+          default: 0,
+          hint: "Lower numbers appear first",
+        }
+      - { label: "Bio", name: "body", widget: "markdown" }
+
+  # --- Blog (folder collection, one file per post) ---
+  - name: "blog"
+    label: "Blog"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    sort: "date:desc"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Author", name: "author", widget: "string", required: false }
+      - {
+          label: "Cover Image",
+          name: "cover_image",
+          widget: "image",
+          required: false,
+        }
+      - {
+          label: "SEO Description",
+          name: "seo_description",
+          widget: "text",
+          required: false,
+        }
+      - { label: "Body", name: "body", widget: "markdown" }
