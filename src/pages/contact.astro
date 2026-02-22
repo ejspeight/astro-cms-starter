@@ -1,9 +1,10 @@
 ---
 /**
- * Contact Page — Heading, intro, body content, and contact details from site.ts.
+ * Contact Page — CMS content, contact details, and Netlify Forms.
  *
- * Decision: Netlify Forms integration is deferred to Phase 5 per the plan.
- * For now, this page shows contact info and the CMS body content.
+ * The form uses Netlify's built-in form handling — no backend needed.
+ * Netlify detects the form at deploy time via the `data-netlify="true"` attribute.
+ * On submission, users are redirected to /contact/success.
  */
 
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -37,44 +38,134 @@ const addressLine = `${addr.street}, ${addr.suburb}, ${addr.city} ${addr.postcod
     </section>
 
     <section class="py-12 md:py-16 px-6">
-      <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-12">
 
-        <!-- Body content -->
-        <div class="prose prose-slate">
-          <Content />
+        <!-- Contact form (3 cols) -->
+        <div class="lg:col-span-3">
+          <h2 class="text-2xl font-bold font-heading mb-6">Send Us a Message</h2>
+
+          <form
+            name="contact"
+            method="POST"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+            action="/contact-success"
+            class="space-y-5"
+          >
+            <!-- Honeypot field — hidden from real users, catches bots -->
+            <p class="hidden">
+              <label>Don't fill this out: <input name="bot-field" /></label>
+            </p>
+
+            <!-- Netlify requires this hidden input to match the form name -->
+            <input type="hidden" name="form-name" value="contact" />
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="name" class="block text-sm font-medium text-text-body mb-1">
+                  Name <span class="text-error">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  class="w-full px-4 py-2.5 rounded-md border border-border bg-accent text-text-body
+                         focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label for="email" class="block text-sm font-medium text-text-body mb-1">
+                  Email <span class="text-error">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  class="w-full px-4 py-2.5 rounded-md border border-border bg-accent text-text-body
+                         focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label for="phone" class="block text-sm font-medium text-text-body mb-1">
+                Phone
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="w-full px-4 py-2.5 rounded-md border border-border bg-accent text-text-body
+                       focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
+              />
+            </div>
+
+            <div>
+              <label for="message" class="block text-sm font-medium text-text-body mb-1">
+                Message <span class="text-error">*</span>
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                required
+                class="w-full px-4 py-2.5 rounded-md border border-border bg-accent text-text-body
+                       focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors resize-y"
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="inline-block bg-primary hover:bg-primary-hover text-white font-semibold
+                     px-8 py-3 rounded-md transition-colors duration-200"
+            >
+              Send Message
+            </button>
+          </form>
         </div>
 
-        <!-- Contact details card -->
-        <div class="bg-accent-muted rounded-lg border border-border p-6 space-y-6">
-          <div>
-            <h3 class="font-heading font-bold text-lg mb-2">Email</h3>
-            <a href={`mailto:${site.contact.email}`} class="text-primary hover:text-primary-hover transition-colors">
-              {site.contact.email}
-            </a>
+        <!-- Contact details sidebar (2 cols) -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- CMS body content -->
+          <div class="prose prose-slate">
+            <Content />
           </div>
 
-          <div>
-            <h3 class="font-heading font-bold text-lg mb-2">Phone</h3>
-            <a href={`tel:${site.contact.phone.replace(/\s/g, "")}`} class="text-primary hover:text-primary-hover transition-colors">
-              {site.contact.phone}
-            </a>
-          </div>
+          <!-- Contact info card -->
+          <div class="bg-accent-muted rounded-lg border border-border p-6 space-y-5">
+            <div>
+              <h3 class="font-heading font-bold text-sm uppercase tracking-wide text-text-muted mb-1">Email</h3>
+              <a href={`mailto:${site.contact.email}`} class="text-primary hover:text-primary-hover transition-colors">
+                {site.contact.email}
+              </a>
+            </div>
 
-          <div>
-            <h3 class="font-heading font-bold text-lg mb-2">Address</h3>
-            <p class="text-text-body">{addressLine}</p>
-          </div>
+            <div>
+              <h3 class="font-heading font-bold text-sm uppercase tracking-wide text-text-muted mb-1">Phone</h3>
+              <a href={`tel:${site.contact.phone.replace(/\s/g, "")}`} class="text-primary hover:text-primary-hover transition-colors">
+                {site.contact.phone}
+              </a>
+            </div>
 
-          <div>
-            <h3 class="font-heading font-bold text-lg mb-2">Hours</h3>
-            <dl class="text-sm text-text-body space-y-1">
-              {Object.entries(site.hours).map(([day, hours]) => (
-                <div class="flex justify-between">
-                  <dt class="capitalize">{day}</dt>
-                  <dd>{hours ?? "Closed"}</dd>
-                </div>
-              ))}
-            </dl>
+            <div>
+              <h3 class="font-heading font-bold text-sm uppercase tracking-wide text-text-muted mb-1">Address</h3>
+              <p class="text-text-body">{addressLine}</p>
+            </div>
+
+            <div>
+              <h3 class="font-heading font-bold text-sm uppercase tracking-wide text-text-muted mb-1">Hours</h3>
+              <dl class="text-sm text-text-body space-y-1">
+                {Object.entries(site.hours).map(([day, hours]) => (
+                  <div class="flex justify-between">
+                    <dt class="capitalize">{day}</dt>
+                    <dd>{hours ?? "Closed"}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
           </div>
         </div>
 
